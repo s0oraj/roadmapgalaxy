@@ -13,7 +13,7 @@ interface Props {
   targetPosition?: THREE.Vector3;
 }
 
-const Scene = ({ targetPosition = new THREE.Vector3(8, 0.2, 8) }: Props) => {
+const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
   const navigate = useNavigate();
   const { 
     isTransitioning, 
@@ -48,7 +48,7 @@ const Scene = ({ targetPosition = new THREE.Vector3(8, 0.2, 8) }: Props) => {
     <div className="h-screen w-full bg-black">
       <Canvas
         camera={{
-          position: [0, 4, 13.33],
+          position: [0, 3, 10],
           fov: 75,
           near: 0.1,
           far: 1000
