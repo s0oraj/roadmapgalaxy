@@ -6,7 +6,7 @@ const DEFAULT_CONFIG: GalaxyConfig = {
   radius: 30,
   branches: 5, // More branches for realism
   spin: 1.0, // Reduced for more natural spiral
-  randomnessPower: 2.05,
+  randomnessPower: 2.2,
   bulgeSize: 0.25, // New: controls central bulge size
   armWidth: 0.5, // New: controls spiral arm width
   dustLanes: true, // New: enable dust lanes
