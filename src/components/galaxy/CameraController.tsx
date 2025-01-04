@@ -22,23 +22,24 @@ const CameraController = ({ targetPosition, isTransitioning, onTransitionComplet
   useFrame(() => {
     if (isTransitioning && progress < 1) {
       // Store initial positions
-      const startPosition = new THREE.Vector3(0, 3, 10);
-      const midPoint = startPosition.clone().lerp(targetPosition, 0.5);
+      const startPosition = camera.position.clone();
+      const endPosition = targetPosition.clone().add(new THREE.Vector3(0.1, 0.1, 0.1));
+      const midPoint = startPosition.clone().lerp(endPosition, 0.5);
       midPoint.y += 2; // Add arc to path
 
       // Update progress
       setProgress(prev => {
-        const newProgress = prev + 0.005;
-        if (newProgress >= 1) {
+        // Only trigger transition when we're very close to the star
+        if (newProgress >= 1 && camera.position.distanceTo(targetPosition) < 0.5) {
           onTransitionComplete();
           return 1;
         }
-        return newProgress;
+        return Math.min(newProgress, 1);
       });
 
-      // Calculate new camera position
+
       const p1 = startPosition.clone().lerp(midPoint, progress);
-      const p2 = midPoint.clone().lerp(targetPosition, progress);
+      const p2 = midPoint.clone().lerp(endPosition, progress);
       const currentPos = new THREE.Vector3();
       currentPos.lerpVectors(p1, p2, progress);
 
