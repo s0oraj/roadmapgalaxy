@@ -3,17 +3,17 @@ import { GalaxyConfig } from '../types';
 
 const DEFAULT_CONFIG: GalaxyConfig = {
   particlesCount: 1000000, // Tripled for more detail
-  radius: 30,
+  radius: 20,
   branches: 5, // More branches for realism
-  spin: 1.0, // Reduced for more natural spiral
-  randomnessPower: 1.0,
-  bulgeSize: 0.30, // New: controls central bulge size
-  armWidth: 0.5, // New: controls spiral arm width
+  spin: 1.5, // Reduced for more natural spiral
+  randomnessPower: 2.05,
+  bulgeSize: 0.25, // New: controls central bulge size
+  armWidth: 0.3, // New: controls spiral arm width
   dustLanes: true, // New: enable dust lanes
-  coreIntensity: 2.0, // New: brightness of the core
+  coreIntensity: 2.5, // New: brightness of the core
   // Enhanced colors for more realistic appearance
-  insideColor: '##ff9f3d', // Warmer core color
-  outsideColor: '#3b7ba6', // Bluer spiral arms
+  insideColor: '#ffab4d', // Warmer core color
+  outsideColor: '#3b7bcc', // Bluer spiral arms
   dustColor: '#4a2d05' // Dark dust lane color
 };
 
