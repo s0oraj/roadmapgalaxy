@@ -34,7 +34,8 @@ const Scene = () => {
     isTransitioning, 
     setIsTransitioning, 
     setCursorStyle,
-    setCurrentScene 
+    setCurrentScene, 
+    setSelectedLevel
   } = useNavigationStore();
 
   useEffect(() => {
@@ -56,8 +57,9 @@ const Scene = () => {
 
   const handleTransitionComplete = () => {
     setIsTransitioning(false);
-    setCurrentScene('roadmap');
     navigate('/roadmap');
+    setCurrentScene('roadmap');
+    
   };
 
   return (
