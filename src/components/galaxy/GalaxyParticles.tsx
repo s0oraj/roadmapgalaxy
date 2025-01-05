@@ -1,6 +1,6 @@
 
 // GalaxyParticles.tsx
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion-3d';
 import * as THREE from 'three';
