@@ -95,7 +95,7 @@ const GalaxyParticles = ({ targets, onTargetClick }: Props) => {
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.01}
+          size={0.015}
           sizeAttenuation={true}
           depthWrite={false}
           vertexColors={true}
