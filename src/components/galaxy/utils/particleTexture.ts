@@ -1,4 +1,5 @@
-// particleTexture.ts
+import * as THREE from 'three';
+
 export function createParticleTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 32;
@@ -14,11 +15,10 @@ export function createParticleTexture() {
     canvas.width / 2
   );
   
-  // Enhanced gradient for better star appearance
+  // Brighter core with sharper falloff
   gradient.addColorStop(0, 'rgba(255,255,255,1)');
-  gradient.addColorStop(0.3, 'rgba(255,255,255,0.9)');
-  gradient.addColorStop(0.6, 'rgba(255,255,255,0.3)');
-  gradient.addColorStop(0.8, 'rgba(255,255,255,0.1)');
+  gradient.addColorStop(0.4, 'rgba(255,255,255,0.8)');
+  gradient.addColorStop(0.8, 'rgba(255,255,255,0.2)');
   gradient.addColorStop(1, 'rgba(255,255,255,0)');
   
   context.fillStyle = gradient;
@@ -29,4 +29,3 @@ export function createParticleTexture() {
   
   return texture;
 }
-

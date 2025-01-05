@@ -1,5 +1,5 @@
-// Scene.tsx
-import { useState, useEffect, useCallback } from 'react';
+// src/components/galaxy/Scene.tsx
+import { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -22,15 +22,12 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
     setCurrentScene 
   } = useNavigationStore();
 
-  const [cameraDistance, setCameraDistance] = useState(10);
-
-  const handleCameraMove = useCallback((distance: number) => {
-    setCameraDistance(distance);
-  }, []);
-
   useEffect(() => {
+    // Set initial state
     setCurrentScene('galaxy');
     setCursorStyle('default');
+
+    // Cleanup on unmount
     return () => {
       setIsTransitioning(false);
       setCursorStyle('default');
@@ -52,9 +49,9 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
       <Canvas
         camera={{
           position: [0, 3, 10],
-          fov: 65,
+          fov: 75,
           near: 0.1,
-          far: 2000,
+          far: 1000
         }}
         gl={{ 
           antialias: true,
@@ -68,9 +65,6 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
           targetPosition={targetPosition}
           isTransitioning={isTransitioning}
           onTransitionComplete={handleTransitionComplete}
-          onCameraMove={handleCameraMove}
-          minDistance={2}
-          maxDistance={100}
         />
 
         <OrbitControls
@@ -78,13 +72,11 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
           enableZoom={true}
           enablePan={true}
           enableRotate={true}
-          zoomSpeed={0.6}
+          zoomSpeed={0.5}
           panSpeed={0.5}
-          rotateSpeed={0.4}
-          minDistance={3}
-          maxDistance={80}
-          minPolarAngle={Math.PI * 0.2}
-          maxPolarAngle={Math.PI * 0.8}
+          rotateSpeed={0.5}
+          minPolarAngle={Math.PI * 0.25}
+          maxPolarAngle={Math.PI * 0.75}
         />
         
         <Background />
@@ -92,7 +84,6 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
         <GalaxyParticles
           targetPosition={targetPosition}
           onTargetClick={handleStarClick}
-          cameraDistance={cameraDistance}
         />
       </Canvas>
     </div>

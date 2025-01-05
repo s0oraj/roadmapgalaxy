@@ -1,40 +1,34 @@
-// CameraController.tsx
+// components/galaxy/CameraController.tsx
 import { useThree, useFrame } from '@react-three/fiber';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { CameraControlProps } from '../types';
 
-const CameraController = ({ 
-  targetPosition, 
-  isTransitioning, 
-  onTransitionComplete,
-  onCameraMove,
-  minDistance = 2,
-  maxDistance = 100
-}: CameraControlProps) => {
+interface Props {
+  targetPosition: THREE.Vector3;
+  isTransitioning: boolean;
+  onTransitionComplete: () => void;
+}
+
+const CameraController = ({ targetPosition, isTransitioning, onTransitionComplete }: Props) => {
   const { camera } = useThree();
   const [progress, setProgress] = useState(0);
-
-  const updateCameraDistance = useCallback(() => {
-    const distance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
-    onCameraMove?.(distance);
-  }, [camera, onCameraMove]);
 
   useEffect(() => {
     if (isTransitioning) {
       setProgress(0);
     }
-    updateCameraDistance();
-  }, [isTransitioning, updateCameraDistance]);
+  }, [isTransitioning]);
 
   useFrame(() => {
     if (isTransitioning && progress < 1) {
+      // Store initial positions
       const startPosition = new THREE.Vector3(0, 3, 10);
       const midPoint = startPosition.clone().lerp(targetPosition, 0.5);
-      midPoint.y += 2;
+      midPoint.y += 2; // Add arc to path
 
+      // Update progress
       setProgress(prev => {
-        const newProgress = prev + 0.004;
+        const newProgress = prev + 0.005;
         if (newProgress >= 1) {
           onTransitionComplete();
           return 1;
@@ -42,6 +36,7 @@ const CameraController = ({
         return newProgress;
       });
 
+      // Calculate new camera position
       const p1 = startPosition.clone().lerp(midPoint, progress);
       const p2 = midPoint.clone().lerp(targetPosition, progress);
       const currentPos = new THREE.Vector3();
@@ -49,16 +44,6 @@ const CameraController = ({
 
       camera.position.copy(currentPos);
       camera.lookAt(targetPosition);
-    }
-
-    // Update camera distance for LOD
-    updateCameraDistance();
-
-    // Ensure camera stays within bounds
-    const distance = camera.position.length();
-    if (distance < minDistance || distance > maxDistance) {
-      const clampedDistance = THREE.MathUtils.clamp(distance, minDistance, maxDistance);
-      camera.position.setLength(clampedDistance);
     }
   });
 

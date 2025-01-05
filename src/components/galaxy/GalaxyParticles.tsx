@@ -1,4 +1,3 @@
-// GalaxyParticles.tsx
 import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion-3d';
@@ -6,19 +5,21 @@ import * as THREE from 'three';
 import { Text } from '@react-three/drei';
 import { generateGalaxyGeometry } from './utils/galaxyGeometry';
 import { createParticleTexture } from './utils/particleTexture';
-import { GalaxyParticlesProps } from '../types';
 
-const GalaxyParticles = ({ targetPosition, onTargetClick, cameraDistance }: GalaxyParticlesProps) => {
+interface Props {
+  targetPosition: THREE.Vector3;
+  onTargetClick: () => void;
+}
+
+const GalaxyParticles = ({ targetPosition, onTargetClick }: Props) => {
   const galaxyRef = useRef<THREE.Points>(null);
   const detailsRef = useRef<THREE.Group>(null);
+  // Double the particle count in generateGalaxyGeometry
+  const { positions, colors } = generateGalaxyGeometry(true); // Pass true to double particles
   const [hovered, setHovered] = useState(false);
   
   const particleTexture = useMemo(() => createParticleTexture(), []);
   
-  const geometry = useMemo(() => {
-    return generateGalaxyGeometry(cameraDistance);
-  }, [cameraDistance]);
-
   const linePoints = [
     new THREE.Vector3(0, 0, 0),
     new THREE.Vector3(0, 1.2, 0)
@@ -40,11 +41,6 @@ const GalaxyParticles = ({ targetPosition, onTargetClick, cameraDistance }: Gala
     }
   });
 
-  if (!geometry) return null;
-
-  const particleSize = THREE.MathUtils.lerp(0.006, 0.012, 
-    Math.min(1, cameraDistance / 50));
-
   return (
     <group>
       <motion.points
@@ -61,31 +57,25 @@ const GalaxyParticles = ({ targetPosition, onTargetClick, cameraDistance }: Gala
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={geometry.positions.length / 3}
-            array={geometry.positions}
+            count={positions.length / 3}
+            array={positions}
             itemSize={3}
           />
           <bufferAttribute
             attach="attributes-color"
-            count={geometry.colors.length / 3}
-            array={geometry.colors}
+            count={colors.length / 3}
+            array={colors}
             itemSize={3}
-          />
-          <bufferAttribute
-            attach="attributes-size"
-            count={geometry.sizes.length}
-            array={geometry.sizes}
-            itemSize={1}
           />
         </bufferGeometry>
         <pointsMaterial
-          size={particleSize}
+          size={0.006} // Smaller size since we have more particles
           sizeAttenuation={true}
           depthWrite={false}
           vertexColors={true}
           blending={THREE.AdditiveBlending}
           map={particleTexture}
-          opacity={1.0}
+          opacity={1.2} // Increased brightness
           transparent={true}
         />
       </motion.points>
