@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { GalaxyConfig } from '../types';
 
 const DEFAULT_CONFIG: GalaxyConfig = {
-  particlesCount: 200000, // Tripled for more detail
-  radius: 14,
+  particlesCount: 300000, // Tripled for more detail
+  radius: 16,
   branches: 5, // More branches for realism
   spin: 1.5, // Reduced for more natural spiral
   randomnessPower: 2.8,
@@ -42,7 +42,7 @@ export const generateGalaxyGeometry = (config: Partial<GalaxyConfig> = {}) => {
   const dustLaneColor = new THREE.Color(dustColor);
 
   // Create central bulge particles (30% of total)
-  const bulgeCount = Math.floor(particlesCount * 0.3);
+  const bulgeCount = Math.floor(particlesCount * 0.35);
   let currentIndex = 0;
 
   for (let i = 0; i < bulgeCount; i++) {
