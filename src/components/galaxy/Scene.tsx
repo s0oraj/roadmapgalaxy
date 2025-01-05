@@ -13,7 +13,7 @@ interface Props {
   targetPosition?: THREE.Vector3;
 }
 
-const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
+const Scene = ({ targetPosition = new THREE.Vector3(5, 0.2, 3) }: Props) => {
   const navigate = useNavigate();
   const { 
     isTransitioning, 
