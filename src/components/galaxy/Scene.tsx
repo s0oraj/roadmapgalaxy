@@ -1,5 +1,5 @@
-// src/components/galaxy/Scene.tsx
-import { useState, useEffect } from 'react';
+// Scene.tsx
+import { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -22,12 +22,21 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
     setCurrentScene 
   } = useNavigationStore();
 
+  const [cameraDistance, setCameraDistance] = useState(10);
+
+  const handleCameraChange = useCallback((camera: THREE.Camera) => {
+    const distance = camera.position.length();
+    setCameraDistance(distance);
+    
+    // Adjust far plane based on distance
+    camera.far = Math.max(1000, distance * 2);
+    camera.updateProjectionMatrix();
+  }, []);
+
   useEffect(() => {
-    // Set initial state
     setCurrentScene('galaxy');
     setCursorStyle('default');
 
-    // Cleanup on unmount
     return () => {
       setIsTransitioning(false);
       setCursorStyle('default');
@@ -60,11 +69,13 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.0
         }}
+        onCreated={({ camera }) => handleCameraChange(camera)}
       >
         <CameraController
           targetPosition={targetPosition}
           isTransitioning={isTransitioning}
           onTransitionComplete={handleTransitionComplete}
+          onCameraMove={handleCameraChange}
         />
 
         <OrbitControls
@@ -77,6 +88,7 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
           rotateSpeed={0.5}
           minPolarAngle={Math.PI * 0.25}
           maxPolarAngle={Math.PI * 0.75}
+          onChange={({ target }) => handleCameraChange(target.object)}
         />
         
         <Background />
@@ -84,6 +96,7 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
         <GalaxyParticles
           targetPosition={targetPosition}
           onTargetClick={handleStarClick}
+          cameraDistance={cameraDistance}
         />
       </Canvas>
     </div>
