@@ -1,4 +1,3 @@
-// src/components/galaxy/Scene.tsx
 import { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -9,13 +8,28 @@ import GalaxyParticles from './GalaxyParticles';
 import Background from './Background';
 import CameraController from './CameraController';
 
-interface Props {
-  targetPosition?: THREE.Vector3;
-}
-// 5, 0.2, 3
+const targetPoints = [
+  {
+    position: new THREE.Vector3(6.67, 0.2, 4), // Level 1 - Outer arm
+    label: "Level 1"
+  },
+  {
+    position: new THREE.Vector3(-5.5, 0.2, -4), // Level 2 - Opposite arm
+    label: "Level 2"
+  },
+  {
+    position: new THREE.Vector3(-2, 0.2, 7), // Level 3 - Third arm
+    label: "Level 3"
+  },
+  {
+    position: new THREE.Vector3(4, 0.2, -6), // Level 4 - Fourth arm
+    label: "Level 4"
+  }
+];
 
-const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => { 
+const Scene = () => {
   const navigate = useNavigate();
+  const [selectedTargetIndex, setSelectedTargetIndex] = useState<number | null>(null);
   const { 
     isTransitioning, 
     setIsTransitioning, 
@@ -24,18 +38,17 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
   } = useNavigationStore();
 
   useEffect(() => {
-    // Set initial state
     setCurrentScene('galaxy');
     setCursorStyle('default');
 
-    // Cleanup on unmount
     return () => {
       setIsTransitioning(false);
       setCursorStyle('default');
     };
   }, [setCurrentScene, setCursorStyle, setIsTransitioning]);
 
-  const handleStarClick = () => {
+  const handleStarClick = (index: number) => {
+    setSelectedTargetIndex(index);
     setIsTransitioning(true);
   };
 
@@ -63,7 +76,9 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
         }}
       >
         <CameraController
-          targetPosition={targetPosition}
+          targetPosition={selectedTargetIndex !== null 
+            ? targetPoints[selectedTargetIndex].position 
+            : targetPoints[0].position}
           isTransitioning={isTransitioning}
           onTransitionComplete={handleTransitionComplete}
         />
@@ -83,7 +98,7 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
         <Background />
 
         <GalaxyParticles
-          targetPosition={targetPosition}
+          targets={targetPoints}
           onTargetClick={handleStarClick}
         />
       </Canvas>
