@@ -24,19 +24,13 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
 
   const [cameraDistance, setCameraDistance] = useState(10);
 
-  const handleCameraChange = useCallback((camera: THREE.Camera) => {
-    const distance = camera.position.length();
+  const handleCameraMove = useCallback((distance: number) => {
     setCameraDistance(distance);
-    
-    // Adjust far plane based on distance
-    camera.far = Math.max(1000, distance * 2);
-    camera.updateProjectionMatrix();
   }, []);
 
   useEffect(() => {
     setCurrentScene('galaxy');
     setCursorStyle('default');
-
     return () => {
       setIsTransitioning(false);
       setCursorStyle('default');
@@ -58,9 +52,9 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
       <Canvas
         camera={{
           position: [0, 3, 10],
-          fov: 75,
+          fov: 65,
           near: 0.1,
-          far: 1000
+          far: 2000,
         }}
         gl={{ 
           antialias: true,
@@ -69,13 +63,14 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.0
         }}
-        onCreated={({ camera }) => handleCameraChange(camera)}
       >
         <CameraController
           targetPosition={targetPosition}
           isTransitioning={isTransitioning}
           onTransitionComplete={handleTransitionComplete}
-          onCameraMove={handleCameraChange}
+          onCameraMove={handleCameraMove}
+          minDistance={2}
+          maxDistance={100}
         />
 
         <OrbitControls
@@ -83,12 +78,13 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
           enableZoom={true}
           enablePan={true}
           enableRotate={true}
-          zoomSpeed={0.5}
+          zoomSpeed={0.6}
           panSpeed={0.5}
-          rotateSpeed={0.5}
-          minPolarAngle={Math.PI * 0.25}
-          maxPolarAngle={Math.PI * 0.75}
-          onChange={({ target }) => handleCameraChange(target.object)}
+          rotateSpeed={0.4}
+          minDistance={3}
+          maxDistance={80}
+          minPolarAngle={Math.PI * 0.2}
+          maxPolarAngle={Math.PI * 0.8}
         />
         
         <Background />
