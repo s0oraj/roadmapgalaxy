@@ -5,7 +5,7 @@ import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { useNavigate } from 'react-router-dom';
 import { useNavigationStore } from '../../store/navigationStore';
-import GalaxyParticles from './GalaxyParticles';
+import GalaxyParticlesOptimized from './GalaxyParticlesOptimized';
 import Background from './Background';
 import CameraController from './CameraController';
 
@@ -81,7 +81,7 @@ const Scene = ({ targetPosition = new THREE.Vector3(6.67, 0.2, 4) }: Props) => {
         
         <Background />
 
-        <GalaxyParticles
+        <GalaxyParticlesOptimized
           targetPosition={targetPosition}
           onTargetClick={handleStarClick}
         />
