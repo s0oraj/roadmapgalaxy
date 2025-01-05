@@ -50,6 +50,8 @@ const Scene = () => {
   const handleStarClick = (index: number) => {
     setSelectedTargetIndex(index);
     setIsTransitioning(true);
+    const level = (index + 1) as LevelNumber;
+    setSelectedLevel(level);
   };
 
   const handleTransitionComplete = () => {

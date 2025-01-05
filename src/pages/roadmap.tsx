@@ -3,14 +3,28 @@ import { Suspense, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigationStore } from '../store/navigationStore';
 import StellarRoadmap from '../components/stellar-roadmap/index';
-import { initialNodes, initialEdges } from '../data/roadmapData';
+import { levelData, LevelNumber } from '../data';
+import { useNavigate } from 'react-router-dom';
 
 const RoadmapRoute = () => {
-  const { setCurrentScene } = useNavigationStore();
+  const { setCurrentScene, selectedLevel } = useNavigationStore();
+  const navigate = useNavigate();
   
   useEffect(() => {
     setCurrentScene('roadmap');
-  }, [setCurrentScene]);
+    
+    // Redirect to galaxy if no level is selected
+    if (!selectedLevel) {
+      navigate('/');
+    }
+  }, [setCurrentScene, selectedLevel, navigate]);
+
+  // If no level is selected, show loading or return null
+  if (!selectedLevel) {
+    return null;
+  }
+
+  const { nodes, edges } = levelData[selectedLevel];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
@@ -26,7 +40,7 @@ const RoadmapRoute = () => {
               <div className="text-blue-400 animate-pulse">Loading roadmap...</div>
             </div>
           }>
-            <StellarRoadmap nodes={initialNodes} edges={initialEdges} />
+            <StellarRoadmap nodes={nodes} edges={edges} />
           </Suspense>
         </motion.div>
       </div>
